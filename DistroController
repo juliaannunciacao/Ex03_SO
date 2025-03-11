@@ -1,0 +1,32 @@
+package controller;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+public class DistroController {
+    private String os() {
+        String os = System.getProperty("os.name").toLowerCase();
+        return os;
+    }
+
+    public void exibeDistro() {
+        try {
+            String sistemaOperacional = os();
+            if (sistemaOperacional.contains("nix") || sistemaOperacional.contains("nux")) {
+                Process processo = Runtime.getRuntime().exec("cat /etc/os-release");
+                BufferedReader reader = new BufferedReader(new InputStreamReader(processo.getInputStream()));
+                String linha;
+                System.out.println("Propriedades da Distribuição Linux:");
+                while ((linha = reader.readLine()) != null) {
+                    if (linha.startsWith("NAME") || linha.startsWith("VERSION")) {
+                        System.out.println(linha);
+                    }
+                }
+            } else {
+                System.out.println("O sistema operacional não é Linux.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
